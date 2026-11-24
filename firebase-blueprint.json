@@ -1,0 +1,295 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public creator channel profile and role metadata (no email or private PII).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID matching document ID." },
+        "username": { "type": "string", "description": "Unique public handle without @ prefix." },
+        "displayName": { "type": "string", "description": "Channel display name." },
+        "bio": { "type": "string", "description": "Short user bio." },
+        "channelDescription": { "type": "string", "description": "Extended channel About description." },
+        "avatarUri": { "type": "string", "description": "Avatar URI or bundled drawable ref." },
+        "bannerUri": { "type": "string", "description": "Channel banner URI or bundled drawable ref." },
+        "role": { "type": "string", "enum": ["USER", "CREATOR", "ADMIN"] },
+        "isApprovedUploader": { "type": "boolean" },
+        "isSuspended": { "type": "boolean" },
+        "subscriberCount": { "type": "integer" },
+        "isPrivateProfile": { "type": "boolean" },
+        "hideSubscriberCount": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["uid", "username", "displayName", "role", "isApprovedUploader", "isSuspended", "subscriberCount", "isPrivateProfile", "hideSubscriberCount", "createdAt", "updatedAt"]
+    },
+    "PrivateUserInfo": {
+      "title": "PrivateUserInfo",
+      "description": "Owner-only PII record containing masked email.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "emailMasked": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "emailMasked", "updatedAt"]
+    },
+    "UsernameReservation": {
+      "title": "UsernameReservation",
+      "description": "Unique lowercase username reservation mapping handle to uid.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "updatedAt"]
+    },
+    "BlockedUser": {
+      "title": "BlockedUser",
+      "description": "Blocked creator entry owned by blocker.",
+      "type": "object",
+      "properties": {
+        "blockedUserId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["blockedUserId", "createdAt"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "Channel subscription record scoped to subscriber.",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "subscriberId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["creatorId", "subscriberId", "createdAt"]
+    },
+    "WatchHistoryEntry": {
+      "title": "WatchHistoryEntry",
+      "description": "User watch history playback resume position.",
+      "type": "object",
+      "properties": {
+        "videoId": { "type": "string" },
+        "positionMs": { "type": "integer" },
+        "watchedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["videoId", "positionMs", "watchedAt"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "Activity notification scoped to recipientUserId.",
+      "type": "object",
+      "properties": {
+        "recipientUserId": { "type": "string" },
+        "actorId": { "type": "string" },
+        "actorName": { "type": "string" },
+        "actorAvatarUri": { "type": "string" },
+        "type": { "type": "string", "enum": ["LIKE", "COMMENT", "REPLY", "SUBSCRIPTION", "VIDEO_UPLOAD"] },
+        "videoId": { "type": "string" },
+        "videoThumbnailUri": { "type": "string" },
+        "commentId": { "type": "string" },
+        "message": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "dedupKey": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["recipientUserId", "actorId", "actorName", "type", "message", "isRead", "dedupKey", "createdAt"]
+    },
+    "NotificationPreferences": {
+      "title": "NotificationPreferences",
+      "description": "Per-user notification category toggles.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "likesEnabled": { "type": "boolean" },
+        "commentsEnabled": { "type": "boolean" },
+        "repliesEnabled": { "type": "boolean" },
+        "subscribersEnabled": { "type": "boolean" },
+        "videoUploadsEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "likesEnabled", "commentsEnabled", "repliesEnabled", "subscribersEnabled", "videoUploadsEnabled", "updatedAt"]
+    },
+    "VideoItem": {
+      "title": "VideoItem",
+      "description": "Published Short or Long video metadata.",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "creatorName": { "type": "string" },
+        "creatorAvatarUri": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "format": { "type": "string", "enum": ["SHORT", "LONG"] },
+        "category": { "type": "string", "enum": ["ALL", "TECH", "FOOD", "TRAVEL", "EDUCATION", "ENTERTAINMENT", "MUSIC"] },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "durationSeconds": { "type": "integer" },
+        "fileSizeBytes": { "type": "integer" },
+        "thumbnailUri": { "type": "string" },
+        "videoUri": { "type": "string" },
+        "viewCount": { "type": "integer" },
+        "likeCount": { "type": "integer" },
+        "commentCount": { "type": "integer" },
+        "reportCount": { "type": "integer" },
+        "isPublic": { "type": "boolean" },
+        "isRemoved": { "type": "boolean" },
+        "removalReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["creatorId", "creatorName", "title", "format", "category", "durationSeconds", "fileSizeBytes", "videoUri", "viewCount", "likeCount", "commentCount", "reportCount", "isPublic", "isRemoved", "createdAt", "updatedAt"]
+    },
+    "VideoLike": {
+      "title": "VideoLike",
+      "description": "Per-user video like record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "createdAt"]
+    },
+    "VideoComment": {
+      "title": "VideoComment",
+      "description": "Comment or reply on a video.",
+      "type": "object",
+      "properties": {
+        "videoId": { "type": "string" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "avatarUri": { "type": "string" },
+        "text": { "type": "string" },
+        "parentCommentId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["videoId", "userId", "username", "text", "createdAt"]
+    },
+    "VideoView": {
+      "title": "VideoView",
+      "description": "Anti-fake-view cooldown record per viewer.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "lastCountedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "lastCountedAt"]
+    },
+    "CreatorPlaylist": {
+      "title": "CreatorPlaylist",
+      "description": "Creator playlist containing ordered video IDs.",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "thumbnailUri": { "type": "string" },
+        "isPublic": { "type": "boolean" },
+        "videoIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["creatorId", "title", "isPublic", "videoIds", "createdAt", "updatedAt"]
+    },
+    "ContentReport": {
+      "title": "ContentReport",
+      "description": "User-submitted moderation report.",
+      "type": "object",
+      "properties": {
+        "videoId": { "type": "string" },
+        "videoTitle": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["OPEN", "RESOLVED"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["videoId", "reporterId", "reason", "status", "createdAt"]
+    },
+    "AppErrorLog": {
+      "title": "AppErrorLog",
+      "description": "Playback/upload/auth diagnostic log.",
+      "type": "object",
+      "properties": {
+        "category": { "type": "string", "enum": ["UPLOAD", "PLAYBACK", "AUTH"] },
+        "message": { "type": "string" },
+        "userId": { "type": "string" },
+        "videoId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["category", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public creator channel profiles and roles."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/PrivateUserInfo" },
+      "description": "Owner-only PII data."
+    },
+    "/usernames/{handle}": {
+      "schema": { "$ref": "#/entities/UsernameReservation" },
+      "description": "Unique lowercase username reservation index."
+    },
+    "/users/{userId}/blocked/{targetUserId}": {
+      "schema": { "$ref": "#/entities/BlockedUser" },
+      "description": "Owner's blocked users."
+    },
+    "/users/{userId}/subscriptions/{creatorId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Owner's channel subscriptions."
+    },
+    "/creators/{creatorId}/subscribers/{subscriberId}": {
+      "schema": { "$ref": "#/entities/Subscription" },
+      "description": "Creator-readable subscriber index for upload notifications."
+    },
+    "/users/{userId}/watchHistory/{videoId}": {
+      "schema": { "$ref": "#/entities/WatchHistoryEntry" },
+      "description": "Owner's watch history."
+    },
+    "/users/{userId}/likedVideos/{videoId}": {
+      "schema": { "$ref": "#/entities/VideoLike" },
+      "description": "Owner-only index of liked video IDs."
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "Owner's activity notifications."
+    },
+    "/users/{userId}/notificationPreferences/{prefId}": {
+      "schema": { "$ref": "#/entities/NotificationPreferences" },
+      "description": "Owner's notification preferences."
+    },
+    "/videos/{videoId}": {
+      "schema": { "$ref": "#/entities/VideoItem" },
+      "description": "Published Shorts and Long videos."
+    },
+    "/videos/{videoId}/likes/{userId}": {
+      "schema": { "$ref": "#/entities/VideoLike" },
+      "description": "Per-user video likes."
+    },
+    "/videos/{videoId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/VideoComment" },
+      "description": "Video comments and threaded replies."
+    },
+    "/videos/{videoId}/views/{userId}": {
+      "schema": { "$ref": "#/entities/VideoView" },
+      "description": "Per-user 24h cooldown view tracking."
+    },
+    "/playlists/{playlistId}": {
+      "schema": { "$ref": "#/entities/CreatorPlaylist" },
+      "description": "Creator playlists."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ContentReport" },
+      "description": "Moderation reports."
+    },
+    "/errorLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AppErrorLog" },
+      "description": "Application diagnostic logs."
+    }
+  }
+}
